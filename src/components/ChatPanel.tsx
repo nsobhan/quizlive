@@ -14,7 +14,6 @@ interface Props {
   teamColor: string;
   uid?: string;
   name?: string;
-  locked: boolean;
   readOnly?: boolean;
 }
 
@@ -44,7 +43,7 @@ export function ChatMessages({ code, teamId, uid, compact }: { code: string; tea
   );
 }
 
-export function ChatPanel({ code, teamId, teamName, teamColor, uid, name, locked, readOnly }: Props) {
+export function ChatPanel({ code, teamId, teamName, teamColor, uid, name, readOnly }: Props) {
   const [text, setText] = useState('');
   const [err, setErr] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -69,7 +68,7 @@ export function ChatPanel({ code, teamId, teamName, teamColor, uid, name, locked
       await sendChat(code, teamId, uid, name, filterProfanity(t));
       setText('');
     } catch {
-      setErr('Chat is locked right now.');
+      setErr("Couldn't send — check your connection and try again.");
     }
   }
 
@@ -78,7 +77,6 @@ export function ChatPanel({ code, teamId, teamName, teamColor, uid, name, locked
       <div className="flex items-center gap-2 border-b px-4 py-3">
         <span className="h-3 w-3 rounded-full" style={{ background: teamColor }} aria-hidden />
         <h2 className="flex-1 font-display text-lg font-bold">{teamName} chat</h2>
-        {locked && <span className="chip bg-slate-100 text-slate-500">🔒 Locked</span>}
         {!desktop && <button type="button" className="rounded-lg px-2 text-2xl" onClick={() => setOpen(false)} aria-label="Close chat">
           ×
         </button>}
@@ -94,12 +92,11 @@ export function ChatPanel({ code, teamId, teamName, teamColor, uid, name, locked
               className="input py-2"
               maxLength={300}
               value={text}
-              disabled={locked}
               onChange={(e) => setText(e.target.value)}
-              placeholder={locked ? 'Chat opens during the next question' : 'Message your team…'}
+              placeholder="Message your team…"
               autoComplete="off"
             />
-            <button className="btn-purple btn-sm" disabled={locked || !text.trim()}>Send</button>
+            <button className="btn-purple btn-sm" disabled={!text.trim()}>Send</button>
           </div>
           <p className="px-2 pt-1 text-right text-xs text-slate-400">{text.length}/300</p>
         </form>

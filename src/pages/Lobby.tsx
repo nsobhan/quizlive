@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { ChatPanel } from '../components/ChatPanel';
 import { Banner, FullScreenMessage, Logo, MuteToggle, Screen, Spinner } from '../components/ui';
 import { usePlayerSession } from '../hooks/usePlayerSession';
 import { leaveGame } from '../lib/game';
@@ -37,7 +38,8 @@ export default function Lobby() {
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center px-4 pb-10">
+      <div className="mx-auto flex w-full max-w-6xl flex-1 gap-4 px-3 lg:px-4">
+      <main className="mx-auto flex w-full min-w-0 max-w-3xl flex-1 flex-col items-center px-1 pb-24 lg:pb-10">
         <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mt-4 text-center">
           <p className="text-white/70">You're in as</p>
           <h1 className="font-display text-4xl font-bold sm:text-5xl">{player.name}</h1>
@@ -101,6 +103,10 @@ export default function Lobby() {
           Leave game
         </button>
       </main>
+      {isTeam && game.config.chatEnabled && myTeam && (
+        <ChatPanel code={code} teamId={player.teamId} teamName={myTeam.name} teamColor={myTeam.color} uid={uid} name={player.name} />
+      )}
+      </div>
     </Screen>
   );
 }

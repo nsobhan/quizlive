@@ -136,7 +136,7 @@ export default function HostSetup() {
               <Segmented name="Discussion time" value={cfg.discussionSeconds} onChange={(v) => set({ discussionSeconds: v })}
                 options={[0, 10, 15, 30, 45].map((s) => ({ value: s, label: s ? `${s}s` : 'None' }))} />
             </div>
-            <Toggle checked={cfg.chatEnabled} onChange={(v) => set({ chatEnabled: v })} label="Team chat" hint="Private chat per team, open during discussion and questions." />
+            <Toggle checked={cfg.chatEnabled} onChange={(v) => set({ chatEnabled: v })} label="Team chat" hint="Private chat per team, open for the whole game." />
           </section>
         )}
 

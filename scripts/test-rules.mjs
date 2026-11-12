@@ -116,7 +116,7 @@ await expect('Carl reads team 1 chat', true, () => get(ref(c.db, `chats/${code}/
 await expect('Bob cannot read team 1 chat', false, () => get(ref(b.db, `chats/${code}/t1`)));
 await expect('host reads team 1 chat', true, () => get(ref(host.db, `chats/${code}/t1`)));
 await update(ref(host.db, `games/${code}`), { status: 'reveal' });
-await expect('chat locked after the question ends', false, () => push(ref(a.db, `chats/${code}/t1`), msg(a, 'Alice', 'late')));
+await expect('chat stays open after the question ends', true, () => push(ref(a.db, `chats/${code}/t1`), msg(a, 'Alice', 'late')));
 
 console.log('Host-only data');
 await expect('player cannot read score log', false, () => get(ref(a.db, `scoreLog/${code}`)));

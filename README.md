@@ -14,7 +14,7 @@ A real-time multiplayer quiz game in the style of Kahoot. Players join from thei
   - Players choose a team, are auto-balanced, or are assigned by the host (drag and drop).
   - Team answers can be "everyone answers" (team score is the sum), "first to submit", or "captain submits".
   - An optional discussion phase runs before answers open.
-  - Each team has a private chat: a side panel on desktop, a slide-up drawer on mobile.
+  - Each team has a private chat that stays open for the whole game, lobby included: a side panel on desktop, a slide-up drawer on mobile.
 - **Host panel:**
   - Shows the PIN and a QR code, and a live player list with online status and a kick button.
   - Buttons: Start, Next, Pause/Resume, Stop & reveal, Skip, Show leaderboard, End.

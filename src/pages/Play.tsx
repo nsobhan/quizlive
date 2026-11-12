@@ -34,7 +34,6 @@ export default function Play() {
   const isTeam = game.config.mode === 'team';
   const team = player.teamId ? game.teams?.[player.teamId] : undefined;
   const chatOn = isTeam && game.config.chatEnabled && !!team;
-  const chatLocked = !(game.status === 'discussion' || game.status === 'question');
 
   return (
     <Screen className="flex flex-col">
@@ -50,7 +49,7 @@ export default function Play() {
           </AnimatePresence>
         </main>
         {chatOn && (
-          <ChatPanel code={code} teamId={player.teamId} teamName={team!.name} teamColor={team!.color} uid={uid} name={player.name} locked={chatLocked} />
+          <ChatPanel code={code} teamId={player.teamId} teamName={team!.name} teamColor={team!.color} uid={uid} name={player.name} />
         )}
       </div>
     </Screen>

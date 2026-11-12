@@ -86,7 +86,7 @@
         "$teamId": {
           ".read": "auth != null && (root.child('games/' + $code + '/hostUid').val() === auth.uid || root.child('games/' + $code + '/players/' + auth.uid + '/teamId').val() === $teamId)",
           "$msgId": {
-            ".write": "auth != null && ((root.child('games/' + $code + '/hostUid').val() === auth.uid && !newData.exists()) || (!data.exists() && root.child('games/' + $code + '/players/' + auth.uid + '/teamId').val() === $teamId && root.child('games/' + $code + '/config/chatEnabled').val() === true && (root.child('games/' + $code + '/status').val() === 'discussion' || (root.child('games/' + $code + '/status').val() === 'question' && now <= root.child('games/' + $code + '/timer/endsAt').val() + 1500))))",
+            ".write": "auth != null && ((root.child('games/' + $code + '/hostUid').val() === auth.uid && !newData.exists()) || (!data.exists() && root.child('games/' + $code + '/players/' + auth.uid + '/teamId').val() === $teamId && root.child('games/' + $code + '/config/chatEnabled').val() === true))",
             ".validate": "newData.hasChildren(['playerId', 'name', 'text', 'sentAt'])",
             "playerId": { ".validate": "newData.val() === auth.uid" },
             "name": { ".validate": "newData.val() === root.child('games/' + $code + '/players/' + auth.uid + '/name').val()" },
