@@ -6,7 +6,7 @@ export function fireConfetti(durationMs = 3500) {
     return;
   }
   const end = Date.now() + durationMs;
-  const colors = ['#fbbf24', '#f43f5e', '#3b82f6', '#22c55e', '#a855f7'];
+  const colors = ['#f25022', '#7fba00', '#00a4ef', '#ffb900', '#ffffff'];
   (function frame() {
     confetti({ particleCount: 4, angle: 60, spread: 60, origin: { x: 0 }, colors });
     confetti({ particleCount: 4, angle: 120, spread: 60, origin: { x: 1 }, colors });

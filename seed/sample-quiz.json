@@ -2,7 +2,7 @@
   "title": "General Knowledge Warm-Up",
   "description": "A 10-question sample quiz for testing QuizLive end-to-end.",
   "emoji": "🧠",
-  "color": "#7c3aed",
+  "color": "#0078d4",
   "questions": [
     { "id": "q1", "type": "multiple", "text": "What is the largest planet in our solar system?", "options": ["Earth", "Jupiter", "Saturn", "Neptune"], "correct": [1], "timeLimit": 20, "points": 1000 },
     { "id": "q2", "type": "truefalse", "text": "The Great Wall of China is visible from the Moon with the naked eye.", "options": ["True", "False"], "correct": [1], "timeLimit": 10, "points": 500 },

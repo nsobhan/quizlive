@@ -92,7 +92,7 @@ function HostPanelInner({ code, game, questions }: { code: string; game: Game; q
         <span className="flex-1" />
         {game.status === 'lobby' && (
           <>
-            {unassigned > 0 && <span className="text-sm text-amber-200">{unassigned} player(s) without a team</span>}
+            {unassigned > 0 && <span className="text-sm text-accent-200">{unassigned} player(s) without a team</span>}
             <button className="btn-primary" disabled={busy || playerCount === 0} onClick={act(() => nextStep(code, game, questions, serverNow()), 'start')}>
               Start game ▶
             </button>

@@ -17,9 +17,9 @@ export function HostStage({ code, game, answeredCount, expectedCount }: { code: 
   if (game.status === 'lobby') {
     return (
       <div className="flex h-full flex-col items-center gap-8">
-        <div className="flex flex-col items-center gap-6 rounded-[2rem] bg-white p-6 text-slate-900 shadow-chunky md:flex-row md:gap-10 md:p-8">
+        <div className="flex flex-col items-center gap-6 rounded-3xl bg-white p-6 text-slate-900 shadow-chunky md:flex-row md:gap-10 md:p-8">
           <div className="text-center md:text-left">
-            <p className="text-lg font-bold text-slate-500">Join at <span className="text-violet-700">{location.host}{import.meta.env.BASE_URL}</span></p>
+            <p className="text-lg font-bold text-slate-500">Join at <span className="text-brand-700">{location.host}{import.meta.env.BASE_URL}</span></p>
             <p className="text-lg font-bold text-slate-500">with Game PIN:</p>
             <p className="font-display text-7xl font-bold tracking-widest xl:text-8xl" aria-label={`Game PIN ${code.split('').join(' ')}`}>{code}</p>
           </div>
@@ -63,7 +63,7 @@ export function HostStage({ code, game, answeredCount, expectedCount }: { code: 
     <div className="space-y-6">
       <div className="flex items-center gap-6">
         <div className="card flex-1 p-6 text-center">
-          <p className="mb-1 font-bold text-violet-600">
+          <p className="mb-1 font-bold text-brand-600">
             Question {game.currentQuestionIndex + 1} of {game.totalQuestions}
             {game.status === 'discussion' && ' · 💬 Team discussion'}
           </p>

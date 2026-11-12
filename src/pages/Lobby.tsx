@@ -60,7 +60,7 @@ export default function Lobby() {
         <div className="my-10 flex flex-col items-center gap-3" aria-live="polite">
           <div className="flex gap-2" aria-hidden>
             {[0, 1, 2].map((i) => (
-              <motion.span key={i} className="h-4 w-4 rounded-full bg-amber-300" animate={{ y: [0, -14, 0] }} transition={{ repeat: Infinity, duration: 0.9, delay: i * 0.15 }} />
+              <motion.span key={i} className="h-4 w-4 rounded-full bg-accent-300" animate={{ y: [0, -14, 0] }} transition={{ repeat: Infinity, duration: 0.9, delay: i * 0.15 }} />
             ))}
           </div>
           <p className="font-display text-2xl">Waiting for host to start…</p>
@@ -122,7 +122,7 @@ function PlayerChips({ players, me }: { players: [string, { name: string }][]; m
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0 }}
-            className={`rounded-full px-3 py-1 font-bold ${id === me ? 'bg-amber-300 text-slate-900' : 'bg-white/90 text-slate-900'}`}
+            className={`rounded-full px-3 py-1 font-bold ${id === me ? 'bg-accent-300 text-slate-900' : 'bg-white/90 text-slate-900'}`}
           >
             {p.name}
           </motion.li>

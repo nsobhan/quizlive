@@ -100,7 +100,7 @@ export default function QuizEditor() {
 
   return (
     <Screen>
-      <header className="sticky top-0 z-20 flex flex-wrap items-center gap-3 bg-indigo-950/70 px-4 py-3 backdrop-blur sm:px-6">
+      <header className="sticky top-0 z-20 flex flex-wrap items-center gap-3 bg-brand-900/85 px-4 py-3 backdrop-blur sm:px-6">
         <Link to="/admin" className="btn-ghost btn-sm" onClick={(e) => dirty && !confirm('Discard unsaved changes?') && e.preventDefault()}>
           ← Quizzes
         </Link>
@@ -141,7 +141,7 @@ export default function QuizEditor() {
               <div className="flex flex-wrap gap-1">
                 {QUIZ_EMOJIS.map((em) => (
                   <button key={em} type="button" onClick={() => change({ emoji: em })} aria-pressed={draft.emoji === em}
-                    className={`h-9 w-9 rounded-lg text-xl ${draft.emoji === em ? 'bg-violet-100 ring-2 ring-violet-500' : 'hover:bg-slate-100'}`}>
+                    className={`h-9 w-9 rounded-lg text-xl ${draft.emoji === em ? 'bg-brand-100 ring-2 ring-brand-500' : 'hover:bg-slate-100'}`}>
                     {em}
                   </button>
                 ))}
@@ -265,7 +265,7 @@ function QuestionForm({ q, index, onChange, onDelete, onDuplicate }: { q: Questi
             const ok = q.correct.includes(i);
             return (
               <div key={i} className={`flex items-center gap-2 rounded-2xl p-2 ${s.bg}`}>
-                <Shape shape={s.shape} className="h-7 w-7 shrink-0 text-white" />
+                <Shape shape={s.shape} className={`h-7 w-7 shrink-0 ${s.fg}`} />
                 <label className="sr-only" htmlFor={`opt${i}`}>{s.name} answer</label>
                 <input
                   id={`opt${i}`}
@@ -281,12 +281,12 @@ function QuestionForm({ q, index, onChange, onDelete, onDuplicate }: { q: Questi
                   onClick={() => toggleCorrect(i)}
                   aria-pressed={ok}
                   aria-label={ok ? `${s.name} is correct` : `Mark ${s.name} as correct`}
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-white text-xl font-bold ${ok ? 'bg-white text-emerald-600' : 'bg-transparent text-transparent hover:text-white/60'}`}
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-white text-xl font-bold ${ok ? 'bg-white text-emerald-600' : 'bg-black/10 text-transparent hover:text-white/70'}`}
                 >
                   ✓
                 </button>
                 {q.type === 'multiple' && q.options.length > 2 && (
-                  <button type="button" className="px-1 text-xl text-white/80 hover:text-white" onClick={() => removeOption(i)} aria-label={`Remove ${s.name} answer`}>×</button>
+                  <button type="button" className={`px-1 text-xl opacity-80 hover:opacity-100 ${s.fg}`} onClick={() => removeOption(i)} aria-label={`Remove ${s.name} answer`}>×</button>
                 )}
               </div>
             );

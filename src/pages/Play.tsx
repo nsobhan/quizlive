@@ -73,7 +73,7 @@ function TopBar({ game, player }: { game: Game; player: Player }) {
           Q {game.currentQuestionIndex + 1}/{game.totalQuestions}
         </span>
       )}
-      <motion.span key={team && game.config.teamAnswerRule !== 'all' ? team.score : player.score} initial={{ scale: 1.3 }} animate={{ scale: 1 }} className="chip bg-amber-300 font-display text-lg text-slate-900">
+      <motion.span key={team && game.config.teamAnswerRule !== 'all' ? team.score : player.score} initial={{ scale: 1.3 }} animate={{ scale: 1 }} className="chip bg-accent-300 font-display text-lg text-slate-900">
         {(team && game.config.teamAnswerRule !== 'all' ? team.score : player.score).toLocaleString()}
       </motion.span>
       <MuteToggle />
@@ -152,7 +152,7 @@ function Stage({ code, game, player, uid }: { code: string; game: Game; player: 
     <div className="space-y-4">
       <div className="flex items-start gap-4">
         <div className="card flex-1 p-4 sm:p-6">
-          {game.status === 'discussion' && <p className="mb-1 font-bold text-violet-600">💬 Discuss with your team — answers open soon</p>}
+          {game.status === 'discussion' && <p className="mb-1 font-bold text-brand-600">💬 Discuss with your team — answers open soon</p>}
           <h1 className="text-xl font-bold sm:text-3xl">{q.text}</h1>
         </div>
         {(game.status === 'question' || game.status === 'discussion') && <CountdownRing remaining={remaining} total={total} paused={paused} size={80} />}
@@ -219,7 +219,7 @@ function RankStage({ game, uid }: { game: Game; uid: string }) {
   return (
     <div className="flex flex-col items-center gap-6 pt-8 text-center">
       <p className="text-white/70">{isTeam ? 'Your team is' : 'You are'}</p>
-      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring' }} className="font-display text-8xl font-bold text-amber-300">
+      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring' }} className="font-display text-8xl font-bold text-accent-300">
         #{idx + 1}
       </motion.div>
       <p className="font-display text-2xl">{me?.score.toLocaleString()} points</p>
@@ -249,7 +249,7 @@ function FinalStage({ code, game, uid }: { code: string; game: Game; uid: string
       <div className="text-7xl" aria-hidden>{medal}</div>
       <h1 className="font-display text-4xl font-bold">Game over!</h1>
       <p className="text-xl">
-        {isTeam ? `${ranks[idx]?.name ?? 'Your team'} finished` : 'You finished'} <b className="text-amber-300">#{idx + 1}</b> of {ranks.length}
+        {isTeam ? `${ranks[idx]?.name ?? 'Your team'} finished` : 'You finished'} <b className="text-accent-300">#{idx + 1}</b> of {ranks.length}
       </p>
       {isTeam && myIndiv >= 0 && <p className="text-white/80">Your personal score: {indiv[myIndiv].score.toLocaleString()}</p>}
       <div className="flex flex-wrap justify-center gap-2 pt-4">

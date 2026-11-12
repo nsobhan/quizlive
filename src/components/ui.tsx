@@ -12,7 +12,7 @@ export function Logo({ size = 'md', link = true }: { size?: 'sm' | 'md' | 'xl'; 
   const cls = { sm: 'text-2xl', md: 'text-4xl', xl: 'text-6xl sm:text-7xl' }[size];
   const inner = (
     <span className={`font-display font-bold tracking-tight ${cls}`}>
-      Quiz<span className="text-amber-300">Live</span>
+      Quiz<span className="text-accent-300">Live</span>
       <span className="ml-1 inline-block h-3 w-3 animate-pulse rounded-full bg-rose-500 align-super" aria-hidden />
     </span>
   );
@@ -37,7 +37,7 @@ export function MuteToggle({ className = '' }: { className?: string }) {
 export function Spinner({ label = 'Loading…' }: { label?: string }) {
   return (
     <div className="flex flex-col items-center gap-4 py-16" role="status">
-      <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-amber-300" />
+      <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-accent-300" />
       <p className="font-display text-xl text-white/80">{label}</p>
     </div>
   );
@@ -77,7 +77,7 @@ export function Toggle({ checked, onChange, label, hint }: { checked: boolean; o
       </span>
       <span className="relative mt-1 inline-flex shrink-0">
         <input type="checkbox" className="peer sr-only" checked={checked} onChange={(e) => onChange(e.target.checked)} />
-        <span className="h-7 w-12 rounded-full bg-slate-300 transition peer-checked:bg-violet-600 peer-focus-visible:ring-4 peer-focus-visible:ring-amber-300" />
+        <span className="h-7 w-12 rounded-full bg-slate-300 transition peer-checked:bg-brand-600 peer-focus-visible:ring-4 peer-focus-visible:ring-accent-300" />
         <span className="absolute left-1 top-1 h-5 w-5 rounded-full bg-white shadow transition peer-checked:translate-x-5" />
       </span>
     </label>
@@ -105,7 +105,7 @@ export function Segmented<T extends string | number>({
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
           className={`rounded-xl border-2 px-3 py-2 text-sm font-bold transition ${
-            value === o.value ? 'border-violet-600 bg-violet-600 text-white' : 'border-slate-200 bg-white text-slate-700 hover:border-violet-300'
+            value === o.value ? 'border-brand-600 bg-brand-600 text-white' : 'border-slate-200 bg-white text-slate-700 hover:border-brand-300'
           }`}
         >
           {o.label}

@@ -32,7 +32,7 @@ export function ChatMessages({ code, teamId, uid, compact }: { code: string; tea
             <span className="px-1 text-xs text-slate-400">
               {mine ? 'You' : m.name} · {new Date(m.sentAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
-            <span className={`max-w-[85%] break-words rounded-2xl px-3 py-2 text-sm ${mine ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-900'}`}>
+            <span className={`max-w-[85%] break-words rounded-2xl px-3 py-2 text-sm ${mine ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-900'}`}>
               {filterProfanity(m.text)}
             </span>
           </div>

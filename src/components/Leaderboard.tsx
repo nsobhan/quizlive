@@ -4,7 +4,7 @@ import type { RankEntry } from '../lib/rankings';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
 const PODIUM_H = ['h-44 sm:h-56', 'h-56 sm:h-72', 'h-32 sm:h-44']; // silver, gold, bronze columns
-const PODIUM_BG = ['from-yellow-300 to-amber-500', 'from-slate-200 to-slate-400', 'from-orange-300 to-orange-600'];
+const PODIUM_BG = ['from-yellow-300 to-accent-500', 'from-slate-200 to-slate-400', 'from-orange-300 to-orange-600'];
 
 export function Podium({ entries, big }: { entries: RankEntry[]; big?: boolean }) {
   const order = [1, 0, 2]; // silver, gold, bronze
@@ -23,7 +23,7 @@ export function Podium({ entries, big }: { entries: RankEntry[]; big?: boolean }
             className={`flex flex-col items-center ${big ? 'w-32 sm:w-64' : 'w-28 sm:w-44'}`}
           >
             <div className={`${big ? 'text-6xl' : 'text-4xl'} mb-1`} aria-hidden>{MEDALS[i]}</div>
-            <div className={`mb-2 w-full truncate text-center font-display font-bold ${big ? 'text-3xl' : 'text-lg sm:text-2xl'}`}>
+            <div className={`mb-2 line-clamp-2 w-full break-words text-center font-display font-bold ${big ? 'text-2xl leading-tight' : 'text-lg sm:text-2xl'}`}>
               {e.name}
             </div>
             <div
@@ -71,7 +71,7 @@ export function RankList({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className={`overflow-hidden rounded-2xl ${e.id === highlightId ? 'bg-amber-300 text-slate-900' : 'bg-white/10'}`}
+              className={`overflow-hidden rounded-2xl ${e.id === highlightId ? 'bg-accent-300 text-slate-900' : 'bg-white/10'}`}
             >
               <button
                 type="button"

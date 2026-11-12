@@ -105,7 +105,7 @@ export default function Join() {
               role="tab"
               aria-selected={tab === t}
               onClick={() => setTab(t)}
-              className={`rounded-xl px-3 py-2 font-bold transition ${tab === t ? 'bg-white text-violet-700 shadow' : 'text-slate-500'}`}
+              className={`rounded-xl px-3 py-2 font-bold transition ${tab === t ? 'bg-white text-brand-700 shadow' : 'text-slate-500'}`}
             >
               {t === 'random' ? '🎲 Random' : '✏️ My name'}
             </button>
@@ -114,7 +114,7 @@ export default function Join() {
 
         {tab === 'random' ? (
           <div className="flex items-center gap-2">
-            <div className="flex-1 rounded-2xl bg-violet-50 px-4 py-4 text-center font-display text-2xl font-bold text-violet-700" aria-live="polite">
+            <div className="flex-1 rounded-2xl bg-brand-50 px-4 py-4 text-center font-display text-2xl font-bold text-brand-700" aria-live="polite">
               {random}
             </div>
             <button type="button" className="btn-light btn-sm h-14 w-14 text-2xl" onClick={() => { setRandom(randomName()); play('tap'); }} aria-label="Roll another random name">

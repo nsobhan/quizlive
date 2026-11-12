@@ -94,7 +94,7 @@ export default function HostSetup() {
           <div className="grid grid-cols-2 gap-3">
             {(['individual', 'team'] as const).map((m) => (
               <button key={m} type="button" onClick={() => set({ mode: m })} aria-pressed={cfg.mode === m}
-                className={`rounded-2xl border-4 p-4 text-left transition ${cfg.mode === m ? 'border-violet-600 bg-violet-50' : 'border-slate-200 hover:border-violet-300'}`}>
+                className={`rounded-2xl border-4 p-4 text-left transition ${cfg.mode === m ? 'border-brand-600 bg-brand-50' : 'border-slate-200 hover:border-brand-300'}`}>
                 <div className="text-3xl" aria-hidden>{m === 'individual' ? '🙋' : '👥'}</div>
                 <div className="font-display text-xl font-bold">{m === 'individual' ? 'Individual' : 'Team mode'}</div>
                 <div className="text-sm text-slate-500">{m === 'individual' ? 'Everyone plays for themselves.' : 'Players compete in teams with private chat.'}</div>

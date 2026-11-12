@@ -18,7 +18,7 @@ export function DistributionChart({ options, distribution, correct }: { options:
               transition={{ type: 'spring', stiffness: 80, damping: 15, delay: i * 0.08 }}
               className={`w-full rounded-t-xl ${TILE_STYLES[i].bg} ${ok ? '' : 'opacity-40'}`}
             />
-            <div className={`flex w-full items-center justify-center gap-1 rounded-xl py-2 ${TILE_STYLES[i].bg} ${ok ? '' : 'opacity-40'}`}>
+            <div className={`flex w-full items-center justify-center gap-1 rounded-xl py-2 ${TILE_STYLES[i].bg} ${TILE_STYLES[i].fg} ${ok ? '' : 'opacity-40'}`}>
               <Shape shape={TILE_STYLES[i].shape} className="h-6 w-6" />
               {ok && <span className="text-xl font-bold" aria-label="correct">✓</span>}
             </div>

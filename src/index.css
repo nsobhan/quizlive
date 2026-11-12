@@ -6,37 +6,37 @@
   html, body, #root { min-height: 100%; }
   body {
     @apply font-sans text-white antialiased;
-    background: #2a1673;
+    background: #005a9e;
     -webkit-tap-highlight-color: transparent;
   }
   h1, h2, h3 { @apply font-display; }
-  :focus-visible { outline: 3px solid #ffd23f; outline-offset: 3px; }
+  :focus-visible { outline: 2px solid #ffffff; outline-offset: 2px; box-shadow: 0 0 0 4px #201f1e; }
 }
 
 @layer components {
   .bg-brand {
     background:
-      radial-gradient(1200px 600px at 10% -10%, rgba(236, 72, 153, 0.35), transparent 60%),
-      radial-gradient(900px 600px at 110% 10%, rgba(56, 189, 248, 0.25), transparent 60%),
-      linear-gradient(160deg, #4c1d95 0%, #3b2bb8 45%, #1e1b6b 100%);
+      radial-gradient(1100px 600px at 0% -10%, rgba(80, 230, 255, 0.28), transparent 60%),
+      radial-gradient(900px 600px at 110% 110%, rgba(0, 46, 80, 0.55), transparent 60%),
+      linear-gradient(135deg, #0078d4 0%, #005a9e 55%, #004578 100%);
   }
   .card { @apply rounded-3xl bg-white text-slate-900 shadow-xl; }
   .card-glass { @apply rounded-3xl bg-white/10 backdrop-blur ring-1 ring-white/15; }
   .btn {
     @apply inline-flex select-none items-center justify-center gap-2 rounded-2xl px-5 py-3 font-display text-lg font-semibold
-      shadow-chunky-sm transition active:translate-y-1 active:shadow-none disabled:cursor-not-allowed disabled:opacity-50
-      disabled:active:translate-y-0;
+      shadow-chunky-sm transition active:scale-[0.98] active:shadow-none disabled:cursor-not-allowed disabled:opacity-50
+      disabled:active:scale-100;
   }
-  .btn-primary { @apply btn bg-amber-400 text-slate-900 hover:bg-amber-300; }
-  .btn-purple { @apply btn bg-violet-600 text-white hover:bg-violet-500; }
+  .btn-primary { @apply btn bg-accent-400 text-slate-900 hover:bg-accent-300; }
+  .btn-purple { @apply btn bg-brand-600 text-white hover:bg-brand-700; }
   .btn-dark { @apply btn bg-slate-800 text-white hover:bg-slate-700; }
   .btn-light { @apply btn bg-white text-slate-900 hover:bg-slate-100; }
   .btn-danger { @apply btn bg-rose-600 text-white hover:bg-rose-500; }
-  .btn-ghost { @apply btn bg-white/10 text-white shadow-none hover:bg-white/20 active:translate-y-0; }
+  .btn-ghost { @apply btn bg-white/10 text-white shadow-none hover:bg-white/20; }
   .btn-sm { @apply px-3 py-1.5 text-sm rounded-xl; }
   .input {
-    @apply w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400
-      focus:border-violet-500 focus:outline-none;
+    @apply w-full rounded-2xl border border-slate-400 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400
+      focus:border-brand-600 focus:outline-none;
   }
   .label { @apply mb-1 block text-sm font-bold text-slate-600; }
   .chip { @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold; }

@@ -79,7 +79,7 @@ export function LeaderboardView({ game, code, isHost, compact }: { game: Game; c
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
-            className="mx-auto mb-6 w-fit rounded-full bg-gradient-to-r from-amber-300 to-yellow-200 px-6 py-2 text-center font-display text-xl font-bold text-slate-900 shadow-chunky sm:text-2xl"
+            className="mx-auto mb-6 w-fit rounded-full bg-gradient-to-r from-accent-300 to-yellow-200 px-6 py-2 text-center font-display text-xl font-bold text-slate-900 shadow-chunky sm:text-2xl"
             role="status"
           >
             {ended ? '🏆 Winner' : '👑 Live leader'}: {leader.name} · {leader.score.toLocaleString()}

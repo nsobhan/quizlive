@@ -53,7 +53,7 @@ export function TeamsPanel({ code, game }: { code: string; game: Game }) {
         if (uid && teamId) assignTeam(code, uid, teamId);
         setDragging(null);
       }}
-      className={`rounded-2xl border-2 p-2 transition ${over === teamId && dragging ? 'border-violet-500 bg-violet-50' : 'border-slate-100 bg-slate-50'}`}
+      className={`rounded-2xl border-2 p-2 transition ${over === teamId && dragging ? 'border-brand-500 bg-brand-50' : 'border-slate-100 bg-slate-50'}`}
     >
       <h3 className="mb-1 flex items-center gap-2 px-1 font-bold">
         {color && <span className="h-3 w-3 rounded-full" style={{ background: color }} aria-hidden />}

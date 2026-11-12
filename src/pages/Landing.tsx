@@ -107,7 +107,7 @@ function FloatingShapes() {
   const items = [
     { s: 'triangle', c: 'text-tile-red', x: '8%', y: '15%', d: 0 },
     { s: 'diamond', c: 'text-tile-blue', x: '85%', y: '20%', d: 1 },
-    { s: 'circle', c: 'text-amber-400', x: '12%', y: '75%', d: 2 },
+    { s: 'circle', c: 'text-accent-400', x: '12%', y: '75%', d: 2 },
     { s: 'square', c: 'text-tile-green', x: '80%', y: '70%', d: 1.5 },
   ] as const;
   return (

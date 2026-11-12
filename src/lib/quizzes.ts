@@ -25,7 +25,7 @@ export function normalizeQuiz(input: unknown, ownerUid: string): Omit<Quiz, 'cre
     title: String(raw.title || 'Untitled quiz').slice(0, 120),
     description: String(raw.description ?? ''),
     emoji: raw.emoji || '🧠',
-    color: raw.color || '#7c3aed',
+    color: raw.color || '#0078d4',
     ownerUid,
     questions: (raw.questions ?? []).map((q) => {
       const options = (Array.isArray(q.options) ? q.options : []).map(String).slice(0, 4);
