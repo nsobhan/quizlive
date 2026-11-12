@@ -1,0 +1,18 @@
+{
+  "title": "General Knowledge Warm-Up",
+  "description": "A 10-question sample quiz for testing QuizLive end-to-end.",
+  "emoji": "🧠",
+  "color": "#7c3aed",
+  "questions": [
+    { "id": "q1", "type": "multiple", "text": "What is the largest planet in our solar system?", "options": ["Earth", "Jupiter", "Saturn", "Neptune"], "correct": [1], "timeLimit": 20, "points": 1000 },
+    { "id": "q2", "type": "truefalse", "text": "The Great Wall of China is visible from the Moon with the naked eye.", "options": ["True", "False"], "correct": [1], "timeLimit": 10, "points": 500 },
+    { "id": "q3", "type": "multiple", "text": "Which element has the chemical symbol 'O'?", "options": ["Gold", "Osmium", "Oxygen", "Oganesson"], "correct": [2], "timeLimit": 10, "points": 1000 },
+    { "id": "q4", "type": "multiple", "text": "How many continents are there on Earth?", "options": ["5", "6", "7", "8"], "correct": [2], "timeLimit": 20, "points": 1000 },
+    { "id": "q5", "type": "multiple", "text": "Who painted the Mona Lisa?", "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/320px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg", "options": ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Michelangelo"], "correct": [1], "timeLimit": 20, "points": 1000 },
+    { "id": "q6", "type": "truefalse", "text": "Sound travels faster in water than in air.", "options": ["True", "False"], "correct": [0], "timeLimit": 10, "points": 500 },
+    { "id": "q7", "type": "multiple", "text": "Which of these are prime numbers? (pick any correct one)", "options": ["9", "11", "15", "13"], "correct": [1, 3], "timeLimit": 30, "points": 1000 },
+    { "id": "q8", "type": "multiple", "text": "What is the capital city of Australia?", "options": ["Sydney", "Melbourne", "Canberra", "Perth"], "correct": [2], "timeLimit": 20, "points": 2000 },
+    { "id": "q9", "type": "multiple", "text": "Which ocean is the largest?", "options": ["Atlantic", "Indian", "Arctic", "Pacific"], "correct": [3], "timeLimit": 20, "points": 1000 },
+    { "id": "q10", "type": "multiple", "text": "In computing, what does 'CPU' stand for?", "options": ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Core Processing Utility"], "correct": [0], "timeLimit": 30, "points": 2000 }
+  ]
+}
