@@ -1,13 +1,18 @@
 // ---------- Quizzes (admin-only, /quizzes/{quizId}) ----------
-export type QuestionType = 'multiple' | 'truefalse';
+/** multiple = 2–4 choices, truefalse = True/False, text = players type their answer */
+export type QuestionType = 'multiple' | 'truefalse' | 'text';
 
 export interface Question {
   id: string;
   type: QuestionType;
   text: string;
   imageUrl?: string;
-  options: string[]; // 2–4
-  correct: number[]; // indexes into options (one or more)
+  options: string[]; // 2–4 (empty for text questions)
+  correct: number[]; // indexes into options (one or more; empty for text questions)
+  /** text questions: accepted answers (any one matches) */
+  answers?: string[];
+  /** text questions: tolerate small typos */
+  fuzzy?: boolean;
   timeLimit: number; // seconds
   points: number; // base points
 }
@@ -82,16 +87,26 @@ export interface Timer {
   pauses?: PauseSpan[];
 }
 
+export interface TopAnswer {
+  text: string;
+  count: number;
+  correct: boolean;
+}
+
 export interface Reveal {
   index: number;
   correct: number[];
   distribution: number[];
+  /** text questions: accepted answers and the most common submissions */
+  accepted?: string[];
+  top?: TopAnswer[];
   answered: number;
   expected: number;
 }
 
 export interface Result {
   option: number | null;
+  text?: string;
   correct: boolean;
   points: number;
   streakBonus: number;
@@ -121,7 +136,8 @@ export interface Game {
 // ---------- Separate top-level trees (see README "Data model") ----------
 /** /answers/{code}/{qIndex}/{playerId|teamId} */
 export interface Answer {
-  option: number;
+  option?: number; // choice questions
+  text?: string; // text questions
   answeredAt: number;
   by: string;
 }

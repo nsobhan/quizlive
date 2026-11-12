@@ -1,8 +1,10 @@
 import { get, increment, push, ref, serverTimestamp, set, update } from 'firebase/database';
 import { db } from './firebase';
 import { P } from './paths';
-import { scoreAnswer } from './scoring';
-import type { Answer, Game, GameConfig, PublicQuestion, Question, Result, ScoreLogEntry, Team } from '../types';
+import { isCorrect, scoreAnswer } from './scoring';
+import { filterProfanity } from './names';
+import { normalizeAnswer } from './matching';
+import type { Answer, Game, GameConfig, PublicQuestion, Question, Result, ScoreLogEntry, Team, TopAnswer } from '../types';
 
 const r = (path: string) => ref(db, path);
 
@@ -81,8 +83,10 @@ export async function leaveGame(code: string, uid: string, name: string) {
   await update(ref(db), { [P.player(code, uid)]: null, [P.nameKey(code, name)]: null });
 }
 
-export async function submitAnswer(code: string, qIndex: number, answerId: string, uid: string, option: number) {
-  await set(r(P.answer(code, qIndex, answerId)), { option, answeredAt: serverTimestamp(), by: uid });
+/** `choice` is an option index for choice questions, or the typed text for text questions. */
+export async function submitAnswer(code: string, qIndex: number, answerId: string, uid: string, choice: number | string) {
+  const value = typeof choice === 'number' ? { option: choice } : { text: choice.trim().slice(0, 100) };
+  await set(r(P.answer(code, qIndex, answerId)), { ...value, answeredAt: serverTimestamp(), by: uid });
 }
 
 export async function sendChat(code: string, teamId: string, uid: string, name: string, text: string) {
@@ -108,7 +112,7 @@ const toPublic = (q: Question, index: number): PublicQuestion => ({
   type: q.type,
   text: q.text,
   ...(q.imageUrl ? { imageUrl: q.imageUrl } : {}),
-  options: q.options,
+  options: q.type === 'text' ? [] : q.options ?? [],
   timeLimit: q.timeLimit,
   points: q.points,
 });
@@ -182,9 +186,9 @@ export async function finishQuestion(code: string, game: Game, questions: Questi
   const singleAnswer = cfg.mode === 'team' && cfg.teamAnswerRule !== 'all';
   const upd: Record<string, unknown> = {};
   const g = `games/${code}`;
-  const distribution = q.options.map(() => 0);
+  const distribution = (q.options ?? []).map(() => 0);
   Object.values(answers).forEach((a) => {
-    if (a.option >= 0 && a.option < distribution.length) distribution[a.option]++;
+    if (typeof a.option === 'number' && a.option >= 0 && a.option < distribution.length) distribution[a.option]++;
   });
   const expected = expectedAnswerers(game);
 
@@ -221,12 +225,26 @@ export async function finishQuestion(code: string, game: Game, questions: Questi
   upd[`${g}/timer/pausedAt`] = null;
   upd[`${g}/reveal`] = {
     index: qIndex,
-    correct: q.correct,
+    correct: q.correct ?? [],
     distribution,
     answered: Object.keys(answers).length,
     expected: expected.length,
+    ...(q.type === 'text' ? { accepted: (q.answers ?? []).filter(Boolean), top: topAnswers(q, Object.values(answers)) } : {}),
   };
   await update(ref(db), upd);
+}
+
+/** Group typed answers (by normalised form) and return the most common ones. */
+function topAnswers(q: Question, answers: Answer[], limit = 6): TopAnswer[] {
+  const groups = new Map<string, TopAnswer>();
+  for (const a of answers) {
+    if (typeof a.text !== 'string' || !a.text.trim()) continue;
+    const key = normalizeAnswer(a.text) || a.text.trim().toLowerCase();
+    const g = groups.get(key);
+    if (g) g.count++;
+    else groups.set(key, { text: filterProfanity(a.text.trim()).slice(0, 60), count: 1, correct: isCorrect(q, a) });
+  }
+  return [...groups.values()].sort((x, y) => y.count - x.count || Number(y.correct) - Number(x.correct)).slice(0, limit);
 }
 
 function stripUndefined(res: Result): Result {

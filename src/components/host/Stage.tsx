@@ -5,7 +5,7 @@ import { CountdownRing } from '../CountdownRing';
 import { DistributionChart } from '../DistributionChart';
 import { useTimer } from '../../hooks/useTimer';
 import { LeaderboardView } from '../../pages/Leaderboard';
-import type { Game } from '../../types';
+import type { Game, TopAnswer } from '../../types';
 
 export const joinUrl = (code: string) => `${location.origin}${import.meta.env.BASE_URL}#/join/${code}`;
 
@@ -80,17 +80,64 @@ export function HostStage({ code, game, answeredCount, expectedCount }: { code: 
             <div className="text-white/70">answered</div>
           </div>
         )}
-        {reveal && <DistributionChart options={q.options} distribution={reveal.distribution} correct={reveal.correct} />}
+        {reveal && q.type !== 'text' && <DistributionChart options={q.options ?? []} distribution={reveal.distribution} correct={reveal.correct} />}
       </div>
 
+      {q.type === 'text' ? (
+        reveal ? (
+          <TextReveal accepted={reveal.accepted ?? []} top={reveal.top ?? []} />
+        ) : (
+          <div className="card-glass mx-auto max-w-3xl p-8 text-center">
+            <div className="text-5xl" aria-hidden>⌨️</div>
+            <p className="mt-2 font-display text-3xl font-bold">Type your answer on your device</p>
+          </div>
+        )
+      ) : (
       <div className="grid grid-cols-2 gap-4">
-        {q.options.map((o, i) => (
+        {(q.options ?? []).map((o, i) => (
           <AnswerTile key={i} index={i} label={o} size="xl" disabled
             state={reveal ? (reveal.correct.includes(i) ? 'correct' : 'dimmed') : 'idle'}
             count={reveal ? reveal.distribution[i] : undefined} />
         ))}
       </div>
+      )}
       {reveal && <p className="text-center text-xl text-white/80">{reveal.answered} of {reveal.expected} answered</p>}
+    </div>
+  );
+}
+
+function TextReveal({ accepted, top }: { accepted: string[]; top: TopAnswer[] }) {
+  const max = Math.max(1, ...top.map((t) => t.count));
+  return (
+    <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
+      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="rounded-3xl bg-emerald-600 p-6 text-center shadow-chunky">
+        <p className="font-bold uppercase tracking-wide text-white/80">Correct answer</p>
+        <p className="mt-2 font-display text-5xl font-bold">{accepted[0] ?? '—'}</p>
+        {accepted.length > 1 && <p className="mt-2 text-lg text-white/85">Also accepted: {accepted.slice(1).join(' · ')}</p>}
+      </motion.div>
+      <div className="card-glass p-5">
+        <p className="mb-3 font-bold uppercase tracking-wide text-white/70">What players typed</p>
+        {top.length === 0 ? (
+          <p className="text-white/70">No answers this time.</p>
+        ) : (
+          <ul className="space-y-2">
+            {top.map((t, i) => (
+              <li key={i} className="flex items-center gap-3">
+                <span className="w-40 truncate text-lg font-bold" title={t.text}>{t.correct ? '✓ ' : ''}{t.text}</span>
+                <div className="h-8 flex-1 overflow-hidden rounded-lg bg-black/20">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(t.count / max) * 100}%` }}
+                    transition={{ type: 'spring', stiffness: 80, damping: 16, delay: i * 0.06 }}
+                    className={`h-full rounded-lg ${t.correct ? 'bg-emerald-500' : 'bg-white/40'}`}
+                  />
+                </div>
+                <span className="w-8 text-right font-display text-2xl font-bold">{t.count}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

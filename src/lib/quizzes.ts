@@ -6,6 +6,9 @@ import type { Question, Quiz } from '../types';
 export const newQuestionId = () => Math.random().toString(36).slice(2, 10);
 
 export function blankQuestion(type: Question['type'] = 'multiple'): Question {
+  if (type === 'text') {
+    return { id: newQuestionId(), type, text: '', options: [], correct: [], answers: [''], fuzzy: true, timeLimit: 30, points: 1000 };
+  }
   return {
     id: newQuestionId(),
     type,
@@ -28,11 +31,14 @@ export function normalizeQuiz(input: unknown, ownerUid: string): Omit<Quiz, 'cre
     color: raw.color || '#0078d4',
     ownerUid,
     questions: (raw.questions ?? []).map((q) => {
-      const options = (Array.isArray(q.options) ? q.options : []).map(String).slice(0, 4);
-      const correct = Array.isArray(q.correct) ? (q.correct as unknown[]).map(Number) : [0];
+      const type: Question['type'] = q.type === 'truefalse' ? 'truefalse' : q.type === 'text' ? 'text' : 'multiple';
+      const options = type === 'text' ? [] : (Array.isArray(q.options) ? q.options : []).map(String).slice(0, 4);
+      const correct = type === 'text' ? [] : Array.isArray(q.correct) ? (q.correct as unknown[]).map(Number) : [0];
+      const answers = type === 'text' && Array.isArray(q.answers) ? (q.answers as unknown[]).map(String).filter(Boolean).slice(0, 10) : undefined;
       return {
         id: typeof q.id === 'string' && q.id ? q.id : newQuestionId(),
-        type: (q.type === 'truefalse' ? 'truefalse' : 'multiple') as Question['type'],
+        type,
+        ...(answers ? { answers, fuzzy: q.fuzzy !== false } : {}),
         text: String(q.text ?? ''),
         ...(q.imageUrl ? { imageUrl: String(q.imageUrl) } : {}),
         options,
@@ -65,6 +71,10 @@ export function validateQuiz(q: Pick<Quiz, 'title' | 'questions'>): string[] {
   q.questions.forEach((x, i) => {
     const n = `Question ${i + 1}`;
     if (!x.text.trim()) errs.push(`${n}: missing question text.`);
+    if (x.type === 'text') {
+      if (!(x.answers ?? []).some((a) => a.trim())) errs.push(`${n}: add at least one accepted answer.`);
+      return;
+    }
     if (x.options.length < 2) errs.push(`${n}: needs at least 2 answers.`);
     if (x.options.some((o) => !o.trim())) errs.push(`${n}: fill in every answer (or remove empty ones).`);
     if (!x.correct.length) errs.push(`${n}: mark at least one correct answer.`);

@@ -90,7 +90,8 @@ function Stage({ code, game, player, uid }: { code: string; game: Game; player: 
   const q = game.question;
   const { remaining, total, paused } = useTimer(game);
   const myAnswer = useValue<Answer>(answerId && qi >= 0 ? P.answer(code, qi, answerId) : null);
-  const [pending, setPending] = useState<number | null>(null);
+  const [pending, setPending] = useState<number | string | null>(null);
+  const [typed, setTyped] = useState('');
   const [err, setErr] = useState<string | null>(null);
   const team = player.teamId ? game.teams?.[player.teamId] : undefined;
   const isCaptain = team?.captainId === uid;
@@ -100,6 +101,7 @@ function Stage({ code, game, player, uid }: { code: string; game: Game; player: 
     setPending(null);
     setErr(null);
   }, [qi, game.status]);
+  useEffect(() => setTyped(''), [qi]);
 
   // Sound cues
   const prev = useRef(game.status);
@@ -124,12 +126,15 @@ function Stage({ code, game, player, uid }: { code: string; game: Game; player: 
     return <Notice emoji="⏳" title="Waiting for a team" text="The host hasn't put you on a team yet." />;
   }
 
-  const chosen = myAnswer?.option ?? pending;
+  const isText = q.type === 'text';
+  const options = q.options ?? [];
+  const chosen: number | string | null = (isText ? myAnswer?.text : myAnswer?.option) ?? pending;
   const canAnswer =
     game.status === 'question' && !paused && remaining > 0 && myAnswer == null && pending == null && (!single || cfg.teamAnswerRule === 'first' || isCaptain);
 
-  async function answer(i: number) {
+  async function answer(i: number | string) {
     if (!canAnswer || !answerId) return;
+    if (typeof i === 'string' && !i.trim()) return;
     setPending(i);
     play('tap');
     try {
@@ -167,14 +172,26 @@ function Stage({ code, game, player, uid }: { code: string; game: Game; player: 
         <p className="rounded-2xl bg-white/10 p-3 text-center font-bold">👑 Your captain submits the team's answer — help them in chat!</p>
       )}
       {single && cfg.teamAnswerRule === 'first' && game.status === 'question' && !myAnswer && (
-        <p className="rounded-2xl bg-white/10 p-3 text-center text-sm">⚡ One answer per team — the first teammate to tap locks it in.</p>
+        <p className="rounded-2xl bg-white/10 p-3 text-center text-sm">⚡ One answer per team — the first teammate to submit locks it in.</p>
       )}
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {q.options.map((o, i) => (
-          <AnswerTile key={i} index={i} label={o} onClick={() => answer(i)} disabled={!canAnswer} state={tileState(i)} />
-        ))}
-      </div>
+      {isText ? (
+        <TextAnswer
+          value={chosen != null ? String(chosen) : typed}
+          onChange={setTyped}
+          onSubmit={() => answer(typed)}
+          disabled={!canAnswer}
+          submitted={chosen != null}
+          reveal={reveal ? { accepted: reveal.accepted ?? [], correct: !!result?.correct } : null}
+          waitingLabel={game.status === 'discussion' ? 'Answers open after the discussion' : undefined}
+        />
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {options.map((o, i) => (
+            <AnswerTile key={i} index={i} label={o} onClick={() => answer(i)} disabled={!canAnswer} state={tileState(i)} />
+          ))}
+        </div>
+      )}
 
       {err && <p className="text-center font-bold text-rose-200" role="alert">{err}</p>}
 
@@ -184,14 +201,14 @@ function Stage({ code, game, player, uid }: { code: string; game: Game; player: 
         </motion.p>
       )}
 
-      {reveal && <ResultCard result={result} single={single} />}
+      {reveal && <ResultCard result={result} single={single} accepted={isText ? reveal.accepted : undefined} />}
     </div>
   );
 }
 
-function ResultCard({ result, single }: { result?: Result; single: boolean }) {
+function ResultCard({ result, single, accepted }: { result?: Result; single: boolean; accepted?: string[] }) {
   const ok = !!result?.correct;
-  const none = !result || result.option == null;
+  const none = !result || (result.option == null && !result.text);
   return (
     <motion.div
       initial={{ scale: 0.6, opacity: 0 }}
@@ -204,8 +221,71 @@ function ResultCard({ result, single }: { result?: Result; single: boolean }) {
       <h2 className="font-display text-4xl font-bold">{ok ? 'Correct!' : none ? "Time's up!" : 'Incorrect'}</h2>
       <p className="mt-2 font-display text-3xl">+{(result?.points ?? 0).toLocaleString()}</p>
       {ok && !!result?.streakBonus && <p className="mt-1 font-bold">🔥 Streak bonus +{result.streakBonus}</p>}
+      {!ok && accepted && accepted.length > 0 && (
+        <p className="mt-2 font-bold">Answer: {accepted.slice(0, 3).join(' / ')}</p>
+      )}
       {!ok && <p className="mt-1 text-white/80">{single ? "Your team's streak resets." : 'Streak reset — get the next one!'}</p>}
     </motion.div>
+  );
+}
+
+function TextAnswer({
+  value,
+  onChange,
+  onSubmit,
+  disabled,
+  submitted,
+  reveal,
+  waitingLabel,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  onSubmit: () => void;
+  disabled: boolean;
+  submitted: boolean;
+  reveal: { accepted: string[]; correct: boolean } | null;
+  waitingLabel?: string;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (!disabled) ref.current?.focus();
+  }, [disabled]);
+  return (
+    <form
+      className="card space-y-3 p-4 sm:p-5"
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
+      <label htmlFor="typed-answer" className="label">{submitted ? 'Your answer' : waitingLabel ?? 'Type your answer'}</label>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <input
+          id="typed-answer"
+          ref={ref}
+          className={`input text-xl font-bold ${reveal ? (reveal.correct ? 'border-emerald-600 bg-emerald-500/10' : 'border-rose-600 bg-rose-50') : ''}`}
+          value={value}
+          maxLength={100}
+          disabled={disabled}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={disabled && !submitted ? '' : 'Your answer…'}
+          autoComplete="off"
+          autoCapitalize="off"
+          autoCorrect="off"
+          spellCheck={false}
+          enterKeyHint="send"
+        />
+        {!submitted && !reveal && (
+          <button className="btn-purple shrink-0 px-8" disabled={disabled || !value.trim()}>Submit</button>
+        )}
+      </div>
+      {reveal && (
+        <p className="text-slate-700">
+          {reveal.correct ? '✓ Correct!' : '✗ Not quite.'} Accepted:{' '}
+          <b>{reveal.accepted.length ? reveal.accepted.join(' / ') : '—'}</b>
+        </p>
+      )}
+    </form>
   );
 }
 

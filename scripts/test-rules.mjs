@@ -106,6 +106,19 @@ await expect('non-captain cannot answer in captain mode', false, () => set(ref(b
 await update(ref(host.db, `games/${code}`), { 'teams/t2/captainId': b.uid });
 await expect('captain answers in captain mode', true, () => set(ref(b.db, `answers/${code}/1/t2`), { option: 0, answeredAt: serverTimestamp(), by: b.uid }));
 
+console.log('Typed answers');
+const q2 = Date.now();
+await update(ref(host.db, `games/${code}`), { 'config/teamAnswerRule': 'all', currentQuestionIndex: 2, question: { index: 2, type: 'text', text: 'Capital?', timeLimit: 30, points: 1000 }, timer: { startedAt: q2, endsAt: q2 + 30000 } });
+const ans = (cl, q, v) => set(ref(cl.db, `answers/${code}/${q}/${cl.uid}`), { ...v, answeredAt: serverTimestamp(), by: cl.uid });
+await expect('typed answer over 100 chars rejected', false, () => ans(a, 2, { text: 'x'.repeat(101) }));
+await expect('empty typed answer rejected', false, () => ans(a, 2, { text: '' }));
+await expect('option index rejected on a text question', false, () => ans(a, 2, { option: 0 }));
+await expect('option + text together rejected', false, () => ans(a, 2, { option: 0, text: 'Canberra' }));
+await expect('typed answer accepted', true, () => ans(a, 2, { text: 'Canberra' }));
+await expect('typed answer cannot be changed', false, () => ans(a, 2, { text: 'Sydney' }));
+await update(ref(host.db, `games/${code}`), { currentQuestionIndex: 3, question: { index: 3, type: 'multiple', text: 'x', options: ['a', 'b'], timeLimit: 30, points: 1000 } });
+await expect('typed answer rejected on a choice question', false, () => ans(c, 3, { text: 'a' }));
+
 console.log('Team chat');
 const msg = (cl, name, text) => ({ playerId: cl.uid, name, text, sentAt: serverTimestamp() });
 await expect('Alice posts in team 1 chat', true, () => push(ref(a.db, `chats/${code}/t1`), msg(a, 'Alice', 'hi team')));

@@ -21,7 +21,7 @@ A real-time multiplayer quiz game in the style of Kahoot. Players join from thei
   - Shows a live answer counter and an answer distribution chart after each question.
   - The host can adjust any score by +/- points with a reason (all adjustments are logged) and read every team chat.
 - **Leaderboard (projector view):** live rankings with animated rank changes, a podium, a "live leader" banner, and a team member breakdown. At the end it shows confetti, the full results table and CSV export.
-- **Quiz editor:** multiple-choice (2–4 answers, one or more correct) and true/false questions, optional image URL, 10/20/30/60-second time limits, 500/1000/2000 or custom base points. Questions can be reordered by drag and drop, duplicated and deleted. Quizzes can be imported from JSON, and a 10-question sample quiz is included.
+- **Quiz editor:** multiple-choice (2–4 answers, one or more correct), true/false and **type answer** questions, optional image URL, 10/20/30/60-second time limits, 500/1000/2000 or custom base points. Questions can be reordered by drag and drop, duplicated and deleted. Quizzes can be imported from JSON, and a 10-question sample quiz is included.
 - **Sound and accessibility:** WebAudio sound effects with a mute toggle, keyboard navigation, visible focus rings, `prefers-reduced-motion` support for the confetti, and shapes so players never have to rely on color alone.
 
 ---
@@ -111,7 +111,7 @@ curl -X PUT -H "Authorization: Bearer owner" -d true \
   "http://127.0.0.1:9000/admins/<UID>.json?ns=demo-quizlive-default-rtdb"
 ```
 
-**Rules test suite** (54 checks against the emulator: answer-key secrecy, one answer per question, forged timestamps, chat privacy, kicks and more):
+**Rules test suite** (61 checks against the emulator: answer-key secrecy, one answer per question, forged timestamps, chat privacy, kicks and more):
 
 ```bash
 npm run emulators      # terminal 1
@@ -128,7 +128,7 @@ npm run test:rules     # terminal 2
 4. Players go to the site on their phones, enter the PIN, and pick a name (and a team, in team mode).
 5. Click **Start game**. Each question ends when the timer runs out or everyone has answered. Then click **Leaderboard ▶ / Next question ▶** to continue.
 
-Sample quiz: [`seed/sample-quiz.json`](seed/sample-quiz.json), 10 questions covering true/false, a question with an image, multiple correct answers, and different point values and time limits. You can import any file in this format with **⬆ Import JSON**.
+Sample quiz: [`seed/sample-quiz.json`](seed/sample-quiz.json), 10 questions covering true/false, two type-answer questions, a question with an image, multiple correct answers, and different point values and time limits. You can import any file in this format with **⬆ Import JSON**.
 
 ---
 
@@ -145,6 +145,16 @@ There is no server. The host's browser ([`useHostEngine`](src/hooks/useHostEngin
 Players only ever write their own player record, their answer, and chat messages. The [rules](database.rules.json) block everything else.
 
 All timing uses **server timestamps**. Each answer's `answeredAt` must equal the server's `now`, so clients can't backdate answers. Countdowns use the connection's server clock offset, so phones with wrong clocks still show the correct timer.
+
+### Type answer questions ([`src/lib/matching.ts`](src/lib/matching.ts))
+
+Players type their answer (up to 100 characters) instead of tapping a tile. Each question has one or more **accepted answers**, e.g. `7` and `seven`. A typed answer is correct if it matches any of them:
+
+- **Always ignored:** capital letters, accents (`Beyoncé` = `Beyonce`), punctuation and dots (`U.S.A.` = `USA`), extra spaces, a leading *the / a / an*, and `&` vs `and`.
+- **Numbers** match by value (`7.0` = `7`), never approximately.
+- **Close spellings** (on by default for each question) accept 1 typo on answers of 4–7 characters and 2 typos on answers of 8 or more (`Canbera` = `Canberra`). Answers of 3 characters or fewer must be exact.
+
+At the reveal, the host screen shows the accepted answers and a chart of the most common things players typed, with correct ones marked ✓.
 
 ### Scoring ([`src/lib/scoring.ts`](src/lib/scoring.ts))
 
@@ -176,7 +186,7 @@ All timing uses **server timestamps**. Each answer's `answeredAt` must equal the
   kicked/{uid}: true
 
 /gameKeys/{code}: { questions[] }                     host-only answer key
-/answers/{code}/{qIndex}/{uid|teamId}: { option, answeredAt, by }
+/answers/{code}/{qIndex}/{uid|teamId}: { option | text, answeredAt, by }
 /chats/{code}/{teamId}/{msgId}: { playerId, name, text, sentAt }
 /scoreLog/{code}/{id}: { targetType, target, targetName, delta, reason, at }
 ```
