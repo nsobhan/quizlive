@@ -101,7 +101,9 @@ function Stage({ code, game, player, uid }: { code: string; game: Game; player: 
     setPending(null);
     setErr(null);
   }, [qi, game.status]);
-  useEffect(() => setTyped(''), [qi]);
+  useEffect(() => {
+    setTyped('');
+  }, [qi]);
 
   // Sound cues
   const prev = useRef(game.status);

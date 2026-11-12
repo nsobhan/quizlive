@@ -21,7 +21,11 @@ export function ChatMessages({ code, teamId, uid, compact }: { code: string; tea
   const raw = useValue<Record<string, ChatMessage>>(P.chat(code, teamId));
   const msgs = useMemo(() => Object.entries(raw ?? {}).sort(([, a], [, b]) => a.sentAt - b.sentAt), [raw]);
   const end = useRef<HTMLDivElement>(null);
-  useEffect(() => end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), [msgs.length]);
+  useEffect(() => {
+    // Braces matter: newer browsers make scrollIntoView() return a Promise, and React
+    // would try to call a returned value as the effect's cleanup function.
+    end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, [msgs.length]);
   return (
     <div className={`flex-1 space-y-2 overflow-y-auto ${compact ? 'p-2' : 'p-3'}`} aria-live="polite">
       {msgs.length === 0 && <p className="py-6 text-center text-sm text-slate-400">No messages yet. Say hi 👋</p>}
