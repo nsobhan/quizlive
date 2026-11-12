@@ -7,15 +7,20 @@ const useEmulator = env.VITE_USE_EMULATOR === 'true';
 
 export const firebaseConfigured = Boolean(env.VITE_FIREBASE_DATABASE_URL) || useEmulator;
 
-const app = initializeApp({
-  apiKey: env.VITE_FIREBASE_API_KEY || 'demo-key',
-  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: env.VITE_FIREBASE_DATABASE_URL || 'http://127.0.0.1:9000?ns=demo-quizlive-default-rtdb',
-  projectId: env.VITE_FIREBASE_PROJECT_ID || 'demo-quizlive',
-  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: env.VITE_FIREBASE_APP_ID,
-});
+// In emulator mode always use the demo project, even if real keys are present in .env.local.
+const app = initializeApp(
+  useEmulator
+    ? { apiKey: 'demo-key', projectId: 'demo-quizlive', databaseURL: 'http://127.0.0.1:9000?ns=demo-quizlive-default-rtdb' }
+    : {
+        apiKey: env.VITE_FIREBASE_API_KEY,
+        authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
+        databaseURL: env.VITE_FIREBASE_DATABASE_URL,
+        projectId: env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: env.VITE_FIREBASE_APP_ID,
+      },
+);
 
 export const auth = getAuth(app);
 export const db = getDatabase(app);
