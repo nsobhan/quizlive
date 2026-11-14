@@ -86,3 +86,31 @@ export function validateQuiz(q: Pick<Quiz, 'title' | 'questions'>): string[] {
   });
   return errs;
 }
+
+/** Portable copy of a quiz: no owner or timestamps, empty/undefined fields dropped. Re-importable via normalizeQuiz. */
+export function quizToJson(q: Pick<Quiz, 'title' | 'description' | 'emoji' | 'color' | 'questions'>) {
+  return JSON.parse(
+    JSON.stringify({
+      title: q.title,
+      description: q.description ?? '',
+      emoji: q.emoji,
+      color: q.color,
+      questions: (q.questions ?? []).map(({ id: _id, ...rest }) => rest),
+    }),
+  );
+}
+
+export function downloadJson(filename: string, data: unknown) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export const jsonFileName = (title: string) =>
+  `${(title || 'quiz').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'quiz'}.json`;

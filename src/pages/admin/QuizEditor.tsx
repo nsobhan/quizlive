@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { get, ref } from 'firebase/database';
 import { db } from '../../lib/firebase';
 import { P } from '../../lib/paths';
-import { blankQuestion, saveQuiz, validateQuiz } from '../../lib/quizzes';
+import { blankQuestion, downloadJson, jsonFileName, quizToJson, saveQuiz, validateQuiz } from '../../lib/quizzes';
 import { POINT_PRESETS, QUIZ_COLORS, QUIZ_EMOJIS, TILE_STYLES, TIME_LIMITS } from '../../lib/constants';
 import { FullScreenMessage, Logo, Screen, Segmented, Spinner, Toggle } from '../../components/ui';
 import { FONT_OPTIONS, QuestionText, TEXT_SIZE_OPTIONS } from '../../components/QuestionText';
@@ -118,6 +118,7 @@ export default function QuizEditor() {
         {errors.length > 0 && (
           <button className="chip bg-rose-600" onClick={() => setShowErrors((s) => !s)}>⚠ {errors.length} issue{errors.length > 1 ? 's' : ''}</button>
         )}
+        <button className="btn-ghost btn-sm" onClick={() => downloadJson(jsonFileName(draft.title), quizToJson(draft))} title="Download this quiz (including unsaved changes) as JSON">⬇ Export JSON</button>
         <button className="btn-light btn-sm" onClick={() => save()} disabled={saving || !dirty}>Save</button>
         <button className="btn-primary btn-sm" onClick={() => save(true)} disabled={saving}>Save & host ▶</button>
       </header>

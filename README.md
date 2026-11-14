@@ -21,7 +21,7 @@ A real-time multiplayer quiz game in the style of Kahoot. Players join from thei
   - Shows a live answer counter and an answer distribution chart after each question.
   - The host can adjust any score by +/- points with a reason (all adjustments are logged) and read every team chat.
 - **Leaderboard (projector view):** live rankings with animated rank changes, a podium, a "live leader" banner, and a team member breakdown. At the end it shows confetti, the full results table and CSV export.
-- **Quiz editor:** multiple-choice (2–4 answers, one or more correct), true/false and **type answer** questions, optional image URL, 10/20/30/60-second time limits, 500/1000/2000 or custom base points. Questions can be reordered by drag and drop, duplicated and deleted. Quizzes can be imported from JSON, and a 10-question sample quiz is included.
+- **Quiz editor:** multiple-choice (2–4 answers, one or more correct), true/false and **type answer** questions, optional image URL, 10/20/30/60-second time limits, 500/1000/2000 or custom base points. Questions can be reordered by drag and drop, duplicated and deleted. Each question can have an optional title, and the title and question each get their own font and size; line breaks are kept. Quizzes can be imported from and exported to JSON (one quiz, or all of them in one file), and a 10-question sample quiz is included.
 - **Sound and accessibility:** WebAudio sound effects with a mute toggle, keyboard navigation, visible focus rings, `prefers-reduced-motion` support for the confetti, and shapes so players never have to rely on color alone.
 
 ---
@@ -128,7 +128,7 @@ npm run test:rules     # terminal 2
 4. Players go to the site on their phones, enter the PIN, and pick a name (and a team, in team mode).
 5. Click **Start game**. Each question ends when the timer runs out or everyone has answered. Then click **Leaderboard ▶ / Next question ▶** to continue.
 
-Sample quiz: [`seed/sample-quiz.json`](seed/sample-quiz.json), 10 questions covering true/false, two type-answer questions, a question with an image, multiple correct answers, and different point values and time limits. You can import any file in this format with **⬆ Import JSON**.
+Sample quiz: [`seed/sample-quiz.json`](seed/sample-quiz.json), 10 questions covering true/false, two type-answer questions, a question with an image, multiple correct answers, and different point values and time limits. You can import any file in this format with **⬆ Import JSON**. **⬇ Export** (on a quiz card or in the editor) downloads a quiz in the same format, and **⬇ Export all** downloads every quiz as `{ "quizzes": [...] }`, which Import JSON also accepts.
 
 ---
 
