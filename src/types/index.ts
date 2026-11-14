@@ -3,12 +3,18 @@
 export type QuestionType = 'multiple' | 'truefalse' | 'text';
 /** Question font size; auto picks one from the text length */
 export type TextSize = 'auto' | 's' | 'm' | 'l' | 'xl';
+export type FontChoice = 'sans' | 'serif' | 'mono' | 'hand';
 
 export interface Question {
   id: string;
   type: QuestionType;
   text: string;
   textSize?: TextSize;
+  /** optional heading shown above the question */
+  title?: string;
+  titleSize?: TextSize;
+  titleFont?: FontChoice;
+  textFont?: FontChoice;
   imageUrl?: string;
   options: string[]; // 2–4 (empty for text questions)
   correct: number[]; // indexes into options (one or more; empty for text questions)
@@ -72,6 +78,11 @@ export interface PublicQuestion {
   type: QuestionType;
   text: string;
   textSize?: TextSize;
+  /** optional heading shown above the question */
+  title?: string;
+  titleSize?: TextSize;
+  titleFont?: FontChoice;
+  textFont?: FontChoice;
   imageUrl?: string;
   options: string[];
   timeLimit: number;

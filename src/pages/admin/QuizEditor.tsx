@@ -7,9 +7,9 @@ import { P } from '../../lib/paths';
 import { blankQuestion, saveQuiz, validateQuiz } from '../../lib/quizzes';
 import { POINT_PRESETS, QUIZ_COLORS, QUIZ_EMOJIS, TILE_STYLES, TIME_LIMITS } from '../../lib/constants';
 import { FullScreenMessage, Logo, Screen, Segmented, Spinner, Toggle } from '../../components/ui';
-import { QuestionText, TEXT_SIZE_OPTIONS } from '../../components/QuestionText';
+import { FONT_OPTIONS, QuestionText, TEXT_SIZE_OPTIONS } from '../../components/QuestionText';
 import { Shape } from '../../components/Shape';
-import type { Question, Quiz } from '../../types';
+import type { FontChoice, Question, Quiz, TextSize } from '../../types';
 
 type Draft = Pick<Quiz, 'title' | 'description' | 'emoji' | 'color' | 'questions'>;
 
@@ -218,7 +218,7 @@ function QuestionRow({ q, i, active, onSelect, onMove, last }: { q: Question; i:
           <span className="block text-xs font-bold opacity-60">
             {i + 1} · {TYPE_LABEL[q.type]} · {q.timeLimit}s
           </span>
-          <span className="block truncate font-bold">{q.text || <i className="opacity-60">Untitled question</i>}</span>
+          <span className="block truncate font-bold">{q.title?.trim() || q.text || <i className="opacity-60">Untitled question</i>}</span>
         </button>
         <div className="flex flex-col">
           <button type="button" className="px-1 text-xs opacity-60 hover:opacity-100 disabled:opacity-20" disabled={i === 0} onClick={() => onMove(-1)} aria-label="Move up">▲</button>
@@ -263,17 +263,33 @@ function QuestionForm({ q, index, onChange, onDelete, onDuplicate }: { q: Questi
         <Segmented name="Question type" value={q.type} onChange={setType} options={[{ value: 'multiple', label: 'Multiple choice' }, { value: 'truefalse', label: 'True / False' }, { value: 'text', label: 'Type answer' }]} />
       </div>
 
-      <div>
-        <label className="label" htmlFor="qtext">Question <span className="font-normal opacity-60">— press Enter for a new line</span></label>
-        <textarea id="qtext" className="input min-h-[110px] text-lg font-bold" rows={Math.min(8, Math.max(3, q.text.split('\n').length + 1))} maxLength={300} value={q.text} onChange={(e) => onChange({ text: e.target.value })} placeholder="Type your question…" />
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <span className="label mb-0">Font size</span>
-          <Segmented name="Font size" value={q.textSize ?? 'auto'} onChange={(v) => onChange({ textSize: v === 'auto' ? undefined : v })} options={TEXT_SIZE_OPTIONS} />
+      <div className="space-y-4">
+        <div>
+          <label className="label" htmlFor="qtitle">Title <span className="font-normal opacity-60">(optional — shown above the question)</span></label>
+          <textarea id="qtitle" className="input font-semibold" rows={Math.min(4, Math.max(1, (q.title ?? '').split('\n').length))} maxLength={120} value={q.title ?? ''} onChange={(e) => onChange({ title: e.target.value || undefined })} placeholder="e.g. Round 2 · Code challenge" />
+          <StyleControls
+            label="Title"
+            size={q.titleSize ?? 'auto'}
+            font={q.titleFont ?? 'sans'}
+            onSize={(v) => onChange({ titleSize: v === 'auto' ? undefined : v })}
+            onFont={(v) => onChange({ titleFont: v === 'sans' ? undefined : v })}
+          />
         </div>
-        {q.text.trim() && (
-          <div className="mt-3 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-center">
-            <p className="mb-1 text-xs font-bold uppercase tracking-wide opacity-60">Preview on the big screen</p>
-            <QuestionText text={q.text} size={q.textSize} variant="host" />
+        <div>
+          <label className="label" htmlFor="qtext">Question <span className="font-normal opacity-60">— press Enter for a new line</span></label>
+          <textarea id="qtext" className="input min-h-[110px] text-lg font-bold" rows={Math.min(8, Math.max(3, q.text.split('\n').length + 1))} maxLength={300} value={q.text} onChange={(e) => onChange({ text: e.target.value })} placeholder="Type your question…" />
+          <StyleControls
+            label="Question"
+            size={q.textSize ?? 'auto'}
+            font={q.textFont ?? 'sans'}
+            onSize={(v) => onChange({ textSize: v === 'auto' ? undefined : v })}
+            onFont={(v) => onChange({ textFont: v === 'sans' ? undefined : v })}
+          />
+        </div>
+        {(q.text.trim() || q.title?.trim()) && (
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-center">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wide opacity-60">Preview on the big screen</p>
+            <QuestionText q={q} variant="host" />
           </div>
         )}
       </div>
@@ -389,6 +405,21 @@ function QuestionForm({ q, index, onChange, onDelete, onDuplicate }: { q: Questi
       <div className="flex justify-end gap-2 border-t pt-4">
         <button type="button" className="btn-light btn-sm border" onClick={onDuplicate}>Duplicate</button>
         <button type="button" className="btn-danger btn-sm" onClick={onDelete}>Delete question</button>
+      </div>
+    </div>
+  );
+}
+
+function StyleControls({ label, size, font, onSize, onFont }: { label: string; size: TextSize; font: FontChoice; onSize: (v: TextSize) => void; onFont: (v: FontChoice) => void }) {
+  return (
+    <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+      <div className="flex items-center gap-2">
+        <span className="font-bold opacity-70">Size</span>
+        <Segmented name={`${label} size`} value={size} onChange={onSize} options={TEXT_SIZE_OPTIONS} />
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="font-bold opacity-70">Font</span>
+        <Segmented name={`${label} font`} value={font} onChange={onFont} options={FONT_OPTIONS} />
       </div>
     </div>
   );

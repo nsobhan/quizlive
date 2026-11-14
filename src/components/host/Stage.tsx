@@ -68,7 +68,7 @@ export function HostStage({ code, game, answeredCount, expectedCount }: { code: 
             Question {game.currentQuestionIndex + 1} of {game.totalQuestions}
             {game.status === 'discussion' && ' · 💬 Team discussion'}
           </p>
-          <QuestionText text={q.text} size={q.textSize} variant="host" />
+          <QuestionText q={q} variant="host" />
         </div>
         {(game.status === 'question' || game.status === 'discussion') && <CountdownRing remaining={remaining} total={total} paused={paused} size={140} />}
       </div>

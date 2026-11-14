@@ -112,6 +112,8 @@ const toPublic = (q: Question, index: number): PublicQuestion => ({
   type: q.type,
   text: q.text,
   ...(q.textSize && q.textSize !== 'auto' ? { textSize: q.textSize } : {}),
+  ...(q.title?.trim() ? { title: q.title.trim(), ...(q.titleSize && q.titleSize !== 'auto' ? { titleSize: q.titleSize } : {}), ...(q.titleFont ? { titleFont: q.titleFont } : {}) } : {}),
+  ...(q.textFont ? { textFont: q.textFont } : {}),
   ...(q.imageUrl ? { imageUrl: q.imageUrl } : {}),
   options: q.type === 'text' ? [] : q.options ?? [],
   timeLimit: q.timeLimit,
