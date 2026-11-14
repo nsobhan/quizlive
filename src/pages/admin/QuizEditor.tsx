@@ -7,6 +7,7 @@ import { P } from '../../lib/paths';
 import { blankQuestion, saveQuiz, validateQuiz } from '../../lib/quizzes';
 import { POINT_PRESETS, QUIZ_COLORS, QUIZ_EMOJIS, TILE_STYLES, TIME_LIMITS } from '../../lib/constants';
 import { FullScreenMessage, Logo, Screen, Segmented, Spinner, Toggle } from '../../components/ui';
+import { QuestionText, TEXT_SIZE_OPTIONS } from '../../components/QuestionText';
 import { Shape } from '../../components/Shape';
 import type { Question, Quiz } from '../../types';
 
@@ -263,8 +264,18 @@ function QuestionForm({ q, index, onChange, onDelete, onDuplicate }: { q: Questi
       </div>
 
       <div>
-        <label className="label" htmlFor="qtext">Question</label>
-        <textarea id="qtext" className="input min-h-[90px] text-lg font-bold" maxLength={300} value={q.text} onChange={(e) => onChange({ text: e.target.value })} placeholder="Type your question…" />
+        <label className="label" htmlFor="qtext">Question <span className="font-normal opacity-60">— press Enter for a new line</span></label>
+        <textarea id="qtext" className="input min-h-[110px] text-lg font-bold" rows={Math.min(8, Math.max(3, q.text.split('\n').length + 1))} maxLength={300} value={q.text} onChange={(e) => onChange({ text: e.target.value })} placeholder="Type your question…" />
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <span className="label mb-0">Font size</span>
+          <Segmented name="Font size" value={q.textSize ?? 'auto'} onChange={(v) => onChange({ textSize: v === 'auto' ? undefined : v })} options={TEXT_SIZE_OPTIONS} />
+        </div>
+        {q.text.trim() && (
+          <div className="mt-3 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-center">
+            <p className="mb-1 text-xs font-bold uppercase tracking-wide opacity-60">Preview on the big screen</p>
+            <QuestionText text={q.text} size={q.textSize} variant="host" />
+          </div>
+        )}
       </div>
 
       <div>

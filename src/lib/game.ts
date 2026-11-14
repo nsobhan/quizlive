@@ -111,6 +111,7 @@ const toPublic = (q: Question, index: number): PublicQuestion => ({
   index,
   type: q.type,
   text: q.text,
+  ...(q.textSize && q.textSize !== 'auto' ? { textSize: q.textSize } : {}),
   ...(q.imageUrl ? { imageUrl: q.imageUrl } : {}),
   options: q.type === 'text' ? [] : q.options ?? [],
   timeLimit: q.timeLimit,

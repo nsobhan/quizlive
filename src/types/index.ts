@@ -1,11 +1,14 @@
 // ---------- Quizzes (admin-only, /quizzes/{quizId}) ----------
 /** multiple = 2–4 choices, truefalse = True/False, text = players type their answer */
 export type QuestionType = 'multiple' | 'truefalse' | 'text';
+/** Question font size; auto picks one from the text length */
+export type TextSize = 'auto' | 's' | 'm' | 'l' | 'xl';
 
 export interface Question {
   id: string;
   type: QuestionType;
   text: string;
+  textSize?: TextSize;
   imageUrl?: string;
   options: string[]; // 2–4 (empty for text questions)
   correct: number[]; // indexes into options (one or more; empty for text questions)
@@ -68,6 +71,7 @@ export interface PublicQuestion {
   index: number;
   type: QuestionType;
   text: string;
+  textSize?: TextSize;
   imageUrl?: string;
   options: string[];
   timeLimit: number;

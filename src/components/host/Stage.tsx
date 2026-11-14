@@ -6,6 +6,7 @@ import { DistributionChart } from '../DistributionChart';
 import { useTimer } from '../../hooks/useTimer';
 import { LeaderboardView } from '../../pages/Leaderboard';
 import type { Game, TopAnswer } from '../../types';
+import { QuestionText } from '../QuestionText';
 
 export const joinUrl = (code: string) => `${location.origin}${import.meta.env.BASE_URL}#/join/${code}`;
 
@@ -67,7 +68,7 @@ export function HostStage({ code, game, answeredCount, expectedCount }: { code: 
             Question {game.currentQuestionIndex + 1} of {game.totalQuestions}
             {game.status === 'discussion' && ' · 💬 Team discussion'}
           </p>
-          <h1 className="text-3xl font-bold xl:text-5xl">{q.text}</h1>
+          <QuestionText text={q.text} size={q.textSize} variant="host" />
         </div>
         {(game.status === 'question' || game.status === 'discussion') && <CountdownRing remaining={remaining} total={total} paused={paused} size={140} />}
       </div>

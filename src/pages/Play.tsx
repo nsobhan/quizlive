@@ -16,6 +16,7 @@ import { playerRankings, rankingsFor } from '../lib/rankings';
 import { play } from '../lib/sound';
 import type { Answer, Game, Player, Result } from '../types';
 import { Kicked } from './Lobby';
+import { QuestionText } from '../components/QuestionText';
 
 export default function Play() {
   const { code = '' } = useParams();
@@ -160,7 +161,7 @@ function Stage({ code, game, player, uid }: { code: string; game: Game; player: 
       <div className="flex items-start gap-4">
         <div className="card flex-1 p-4 sm:p-6">
           {game.status === 'discussion' && <p className="mb-1 font-bold text-brand-600">💬 Discuss with your team — answers open soon</p>}
-          <h1 className="text-xl font-bold sm:text-3xl">{q.text}</h1>
+          <QuestionText text={q.text} size={q.textSize} variant="player" />
         </div>
         {(game.status === 'question' || game.status === 'discussion') && <CountdownRing remaining={remaining} total={total} paused={paused} size={80} />}
       </div>
